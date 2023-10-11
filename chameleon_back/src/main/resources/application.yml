@@ -1,0 +1,50 @@
+spring:
+  servlet:
+    multipart:
+      max-file-size: 150MB
+      max-request-size: 150MB
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url:  jdbc:mysql://localhost:3306/chameleon
+    username: root
+    password: root
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            redirect-uri: http://localhost:8080/login/oauth2/code/google
+            client-id: 900087453526-t9dmt7d7temari2diuud2hia8noh0v92.apps.googleusercontent.com
+            client-secret: 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
+            scope:
+              - email
+              - profile
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: jmclunchselect@gmail.com
+    password: uxngkaoalppcywxt
+    properties:
+      mail:
+        smtp:
+          auth: true
+          timeout: 5000
+          starttls:
+            enable: true
+              
+mybatis:
+  mapper-locations:
+    - /mappers/*.xml 
+    
+jwt:
+  secret: qJzUmGueQXDTxcXJyWUZa2oVwieBrVF41ozvRaHcW4uJ8Y4sJqHQC8WbvNoTC63k
+  
+server:
+  max-http-header-size: 150MB
+  
+file:
+  path: /videos/
+    
+  
+
+

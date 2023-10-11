@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chameleon.band.repository.FileRepository">
+
+	<insert id="uploadVideo" parameterType="hashmap">
+		INSERT INTO video_tb
+		VALUES (0, #{fileName}, #{title}, DATE_FORMAT(now(), '%Y-%m-%d'), #{categoryId})
+	</insert>
+	
+	<select id="getVideos" parameterType="hashmap" resultType="com.chameleon.band.dto.response.VideoResponseDto">
+		SELECT
+			vt.video_id as videoId,
+			vt.video_name as videoName,
+			vt.video_title as videoTitle,
+			vt.upload_date as uploadDate,
+			ct.category_name as categoryName
+		FROM
+			video_tb vt
+			LEFT OUTER JOIN category_tb ct ON (vt.category_id = ct.category_id)
+		WHERE
+			1=1
+			<if test="searchValue != null">
+			    AND vt.video_title LIKE CONCAT('%', #{searchValue}, '%')
+			</if>
+			<if test="categoryId != 5">
+				AND vt.category_id = #{categoryId}			
+			</if>
+
+		ORDER BY
+			video_id DESC
+		LIMIT
+			#{index}, 3
+	</select>
+	
+	<select id="getSelectCategoryCount" parameterType="hashmap" resultType="Integer">
+		SELECT
+			COUNT(*)
+		FROM
+			video_tb vt
+			LEFT OUTER JOIN category_tb ct ON (vt.category_id = ct.category_id)
+		WHERE
+			1=1
+			<if test="searchValue != null">
+			    AND vt.video_title LIKE CONCAT('%', #{searchValue}, '%')
+			</if>
+			<if test="categoryId != 5">
+				AND vt.category_id = #{categoryId}			
+			</if>
+	</select>
+	
+	<select id="getTotalCount" parameterType="hashmap" resultType="Integer">
+		SELECT
+			COUNT(*)
+		FROM
+			video_tb
+		WHERE
+		1=1
+			<if test="searchValue != null">
+				AND video_title LIKE CONCAT("%", #{searchValue}, "%")
+			</if>
+	</select>
+	
+	<select id="getPlayList" resultType="com.chameleon.band.dto.response.VideoResponseDto">
+		SELECT
+			video_id as videoId,
+			video_name as videoName,
+			video_title as videoTitle,
+			upload_date as uploadDate
+		FROM
+			video_tb
+		ORDER BY
+			video_id DESC;
+	</select>
+	
+	<select id="getVideoName" parameterType="Integer" resultType="String">
+		SELECT
+			video_name as videoName
+		FROM
+			video_tb
+		WHERE
+			video_id = #{videoId}
+	</select>
+	<delete id="deleteVideo" parameterType="Integer">
+		DELETE
+		FROM
+			video_tb
+		WHERE
+			video_id = #{videoId}
+	</delete>
+</mapper>
